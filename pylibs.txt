@@ -1,0 +1,6 @@
+pytube -> pip install pytube;
+subprocess -> pip install subprocess32;
+telebot -> pip install pyTelegramBotAPI;
+threading -> pip install threaded;
+re;
+os;
