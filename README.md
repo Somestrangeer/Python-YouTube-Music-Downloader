@@ -10,7 +10,7 @@ The project is based on pytube and pyTelegramBotAPI
 
 # Test the project
 
-At any time you can test the bot by the link: [click](t.me/Musik_Youtube_Bot)
+At any time you can test the bot by the link: [click](https://t.me/Musik_Youtube_Bot)
 
 # Pytube problem
 
