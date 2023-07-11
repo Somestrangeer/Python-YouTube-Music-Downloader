@@ -2,31 +2,47 @@ import telebot
 import pytube
 import time
 from threading import Thread
+
+@bot.message_handler()
 def any_message(message):
-    text = message.text
+	text = message.text
+	correctLink1 = 'https://www.youtube.com/'
+	correctLink2 = "https://youtu.be/"
+	correctLin3 = "https://music.youtube.com/"
 
-    #correctness check
+	if correctLink1 in text or correctLink2 in text or correctLin3 in text:
+		try:
+			yt = YouTube(text)
+			duration = yt.length
 
-    rev = 'https://www.youtube.com/'
-    rev_second = "https://youtu.be/"
-    if rev in text or rev_second in text:
+			name = getSet()
+			name.setName(yt.title)
 
-        #If the length of a video is more than 10 mins then we send the messsage of it
+			boolTimer = getSet()
+			boolTimer.setBoolTimer(True)
 
-        yt = YouTube(text)
-        duration = yt.length
-        if duration < 600:
+			if duration < 600:
+				user_id = getSet()
+				user_id.setID(message.from_user.id)
 
-            #To run the timer we turn to Thread and make 2 branches (timer and the main process)
-            #active at the same time.
+				bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
+				waitMsg = bot.send_message(message.chat.id, 'Пожалуйста, подождите...')
 
-            msg = bot.send_message(message.chat.id, 'Пожалуйста, подождите...')
-            th = Thread(target=timer, args=(message, msg))
-            th2 = Thread(target=some_func, args=(message, text, yt))
-            th.start()
-            th2.start()
-            return
-        elif duration >= 600:
-            bot.send_message(message.chat.id, "Видео должно быть менее 10 минут.")
-    else:
-        bot.send_message(message.chat.id, text="Неправильная ссылка")
+				checkPermission = primeSub().addUpdateUser(user_id)
+
+				if checkPermission == True:
+					threadOne = Thread(target=timer().start, args=(message, waitMsg, name, boolTimer))
+					threadTwo = Thread(target=startDownloadVideo().Download, args=(message, text, yt, name, boolTimer))
+					threadOne.start()
+					threadTwo.start()
+					return
+				else:
+					bot.delete_message(chat_id=message.chat.id, message_id=waitMsg.message_id)
+					error_message(message)
+					return
+			else:
+				bot.send_message(message.chat.id, text="Видео должно быть менее 10 минут")
+		except:
+			bot.send_message(message.chat.id, text="Некорректная ссылка")
+	else:
+	    bot.send_message(message.chat.id, text="Неправильная ссылка")
